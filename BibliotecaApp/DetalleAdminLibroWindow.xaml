@@ -1,0 +1,35 @@
+﻿<Window x:Class="BibliotecaApp.DetalleAdminLibroWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Detalle del Libro" Height="600" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Imagen portada -->
+        <Image x:Name="imgPortada" Width="280" Height="400" Stretch="UniformToFill" />
+
+        <!-- Datos del libro -->
+        <StackPanel Grid.Column="1" Margin="20,0,0,0">
+            <TextBlock x:Name="txtTitulo" FontSize="24" FontWeight="Bold" TextWrapping="Wrap"/>
+            <TextBlock x:Name="txtAutor" FontSize="18" Margin="0,5,0,0"/>
+            <TextBlock x:Name="txtEditorial" FontSize="16" Margin="0,5,0,0"/>
+            <TextBlock x:Name="txtPaginas" FontSize="16" Margin="0,5,0,0"/>
+            <TextBlock x:Name="txtIdioma" FontSize="16" Margin="0,5,0,0"/>
+            <TextBlock x:Name="txtCategoria" FontSize="16" Margin="0,5,0,0"/>
+            <TextBlock x:Name="txtAnioPublicacion" FontSize="16" Margin="0,5,0,0"/>
+
+            <TextBlock Text="Descripción:" FontWeight="Bold" Margin="0,20,0,5"/>
+            <TextBlock x:Name="txtDescripcion" TextWrapping="Wrap" Height="100" Width="Auto" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,20,0,0">
+                <Button Content="Editar" Width="100" Click="BtnEditar_Click" Background="#2E8B57" Foreground="White" Margin="0,0,10,0"/>
+                <Button Content="Eliminar" Width="100" Click="BtnEliminar_Click" Background="#B22222" Foreground="White" Margin="0,0,10,0"/>
+                <Button Content="Cerrar" Width="100" Click="BtnCerrar_Click" />
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,46 @@
+﻿<Window x:Class="BibliotecaApp.EditarLibroWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Editar Libro" Height="600" Width="400" WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <StackPanel>
+            <TextBlock Text="Selecciona libro:" FontWeight="Bold"/>
+            <ComboBox x:Name="cbEditarLibros" Width="350" Margin="0,5" SelectionChanged="cbEditarLibros_SelectionChanged"/>
+
+            <TextBlock Text="Título:" FontWeight="Bold"/>
+            <TextBox x:Name="txtEditTitulo" Margin="0,5,0,10"/>
+
+            <TextBlock Text="Autor:" FontWeight="Bold"/>
+            <TextBox x:Name="txtEditAutor" Margin="0,5,0,10"/>
+
+            <TextBlock Text="Editorial:" FontWeight="Bold"/>
+            <TextBox x:Name="txtEditEditorial" Margin="0,5,0,10"/>
+
+            <TextBlock Text="Páginas:" FontWeight="Bold"/>
+            <TextBox x:Name="txtEditPaginas" Margin="0,5,0,10"/>
+
+            <TextBlock Text="Idioma:" FontWeight="Bold"/>
+            <TextBox x:Name="txtEditIdioma" Margin="0,5,0,10"/>
+
+            <TextBlock Text="Categoría:" FontWeight="Bold"/>
+            <TextBox x:Name="txtEditCategoria" Margin="0,5,0,10"/>
+
+            <TextBlock Text="Año de publicación:" FontWeight="Bold"/>
+            <TextBox x:Name="txtEditAño" Margin="0,5,0,10"/>
+
+            <TextBlock Text="Descripción:" FontWeight="Bold"/>
+            <TextBox x:Name="txtEditDescripcion" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,5,0,10"/>
+
+            <TextBlock Text="Link Portada (URL):" FontWeight="Bold"/>
+            <TextBox x:Name="txtEditPortadaLink" Margin="0,5,0,10"/>
+
+            <Button x:Name="btnGuardarCambios" Content="Guardar Cambios" Width="150" HorizontalAlignment="Center" Margin="10" Click="btnGuardarCambios_Click"/>
+
+            <TextBlock x:Name="txtMensaje" Text="Libro editado correctamente" Foreground="Green" 
+           FontWeight="Bold" Margin="10" Visibility="Collapsed" HorizontalAlignment="Center"/>
+
+        </StackPanel>
+    </Grid>
+</Window>
+
+    
