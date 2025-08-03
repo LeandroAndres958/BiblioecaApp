@@ -11,6 +11,8 @@ namespace BibliotecaApp
         public LoginWindow()
         {
             InitializeComponent();
+            
+            this.WindowState = WindowState.Maximized;
         }
 
         // Evento que se ejecuta al dar clic en "Iniciar sesión"
@@ -39,7 +41,8 @@ namespace BibliotecaApp
                     conexion.Open();
 
                     // Consulta para buscar usuario con ese correo, contraseña y tipo
-                    string query = "SELECT id, tipo FROM usuarios WHERE correo = @correo AND contraseña = @contraseña AND tipo = @tipoBusqueda";
+                    // Ahora también obtenemos el nombre para mostrarlo luego
+                    string query = "SELECT id, nombre, tipo FROM usuarios WHERE correo = @correo AND contraseña = @contraseña AND tipo = @tipoBusqueda";
 
                     using (MySqlCommand comando = new MySqlCommand(query, conexion))
                     {
@@ -53,23 +56,26 @@ namespace BibliotecaApp
                         {
                             if (reader.Read())
                             {
-                                // Si encontró usuario, obtener su ID y tipo
+                                // Si encontró usuario, obtener su ID, nombre y tipo
                                 int idUsuario = reader.GetInt32("id");
+                                string nombreUsuario = reader.GetString("nombre");
                                 string tipo = reader.GetString("tipo");
 
                                 // Guardar ID del usuario para usar en otras partes de la app
                                 App.Current.Properties["idUsuario"] = idUsuario;
+                                App.Current.Properties["usuarioCorreo"] = correo;
 
                                 // Abrir ventana correspondiente según tipo y cerrar login
                                 if (tipo == "lector")
                                 {
-                                    LectorWindow lector = new LectorWindow();
+                                    // Pasar el nombre al constructor para mostrarlo
+                                    LectorWindow lector = new LectorWindow(nombreUsuario);
                                     lector.Show();
                                     this.Close();
                                 }
                                 else if (tipo == "admin")
                                 {
-                                    AdminWindow admin = new AdminWindow();
+                                    HomeAdminWindow admin = new HomeAdminWindow();
                                     admin.Show();
                                     this.Close();
                                 }
@@ -94,13 +100,15 @@ namespace BibliotecaApp
         private void btnCrearCuenta_Click(object sender, RoutedEventArgs e)
         {
             // Obtener datos ingresados
+            // Aquí agregamos lectura del nombre desde un TextBox llamado txtNombre
+            string nombre = txtNombre.Text.Trim();
             string correo = txtCorreo.Text.Trim();
             string contraseña = txtContraseña.Password.Trim();
 
-            // Validar que no estén vacíos
-            if (string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(contraseña))
+            // Validar que no estén vacíos (incluyendo nombre ahora)
+            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(contraseña))
             {
-                MessageBox.Show("Por favor ingresa correo y contraseña para crear la cuenta.");
+                MessageBox.Show("Por favor ingresa nombre, correo y contraseña para crear la cuenta.");
                 return;
             }
 
@@ -132,8 +140,8 @@ namespace BibliotecaApp
 
                     using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, conexion))
                     {
-                        // Por simplicidad, usamos el correo como nombre
-                        insertCmd.Parameters.AddWithValue("@nombre", correo);
+                        // Ahora usamos el nombre real que ingresó el usuario
+                        insertCmd.Parameters.AddWithValue("@nombre", nombre);
                         insertCmd.Parameters.AddWithValue("@correo", correo);
                         insertCmd.Parameters.AddWithValue("@contraseña", contraseña);
 
@@ -155,8 +163,8 @@ namespace BibliotecaApp
                                 // Guardar ID para usar en la app
                                 App.Current.Properties["idUsuario"] = idUsuario;
 
-                                // Abrir ventana lector y cerrar login
-                                LectorWindow lector = new LectorWindow();
+                                // Abrir ventana lector y cerrar login pasando el nombre
+                                LectorWindow lector = new LectorWindow(nombre);
                                 lector.Show();
                                 this.Close();
                             }
@@ -177,3 +185,4 @@ namespace BibliotecaApp
         }
     }
 }
+

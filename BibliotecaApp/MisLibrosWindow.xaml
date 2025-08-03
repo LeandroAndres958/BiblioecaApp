@@ -1,0 +1,93 @@
+﻿<Window x:Class="MyLibraryApp.Windows.Lector.MisLibrosWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:BibliotecaApp.Converters"
+        Title="Mis Libros" Height="600" Width="900"
+        WindowStartupLocation="CenterScreen"
+        Background="#e0e1dd">
+
+    <Window.Resources>
+        <converters:EstadoToVisibilityConverter x:Key="EstadoToVisibilityConverter" />
+        <converters:EstadoCancelVisibilityConverter x:Key="EstadoCancelVisibilityConverter" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header con botón Inicio -->
+        <Border Grid.Row="0" Background="#778da9" Padding="20">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                <!-- Botón de regreso a Inicio -->
+                <Button Content="Inicio" 
+                        Click="btnInicio_Click"
+                        Background="#415a77" 
+                        Foreground="White"
+                        Margin="0,0,20,0"
+                        Padding="5,2"
+                        FontWeight="Bold"
+                        BorderThickness="0"
+                        Cursor="Hand"/>
+
+                <!-- Título -->
+                <TextBlock Text="MI BIBLIOTECA" 
+                           Foreground="#1b263b"
+                           FontSize="25" 
+                           FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Contenido -->
+        <Grid Grid.Row="1" Margin="20" >
+            <StackPanel x:Name="icMisLibros" >
+                <!-- Usuario y rol -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10" >
+                    <Border Width="50" Height="50" CornerRadius="40" BorderBrush="#3498db" BorderThickness="2" Margin="0,0,10,0">
+                        <Rectangle Width="50" Height="50" Fill="#ccc" RadiusX="25" RadiusY="25" />
+
+                    </Border>
+                    <StackPanel>
+                        <TextBlock Text="Gabriel Villegas" FontWeight="Bold" Foreground="#1b263b"/>
+                        <TextBlock Text="Lector" Foreground="#1b263b" FontSize="12"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Text="Mis Libros Prestados" 
+                           Foreground="#1b263b"
+                           FontSize="18" 
+                           FontWeight="Bold" 
+                           Margin="0,0,0,10"/>
+
+                <!-- Lista de libros -->
+                <ItemsControl x:Name="icMisLibrosItems">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White" CornerRadius="5" Padding="15" Margin="0,0,0,15" BorderBrush="#BDC3C7" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Titulo}" FontSize="16" FontWeight="Bold" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding Descripcion}" TextWrapping="Wrap" Foreground="#555555" Margin="0,0,0,10"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+                                        <Button Content="Leer Libro" Width="100" Margin="0,0,10,0" Background="#415a77" Foreground="White"
+                                                Visibility="{Binding Estado, Converter={StaticResource EstadoToVisibilityConverter}}"
+                                                Click="BtnVerLibro_Click"/>
+
+                                        <Button Content="Devolver Libro" Width="100" Background="#e63946" Foreground="White"
+                                                Visibility="{Binding Estado, Converter={StaticResource EstadoCancelVisibilityConverter}}"
+                                                Click="BtnCancelar_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- Contenedor para mostrar el PDF -->
+            <Grid x:Name="gridContenedorPdf" Visibility="Collapsed" Background="White">
+                <ContentControl x:Name="contenidoPDF"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

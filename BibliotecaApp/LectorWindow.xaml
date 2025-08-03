@@ -5,6 +5,15 @@
 
     <DockPanel Margin="10">
 
+
+        <!-- Texto para saludar al lector -->
+        <TextBlock x:Name="txtNombreUsuario" 
+           FontSize="16" 
+           FontWeight="Bold" 
+           Margin="10"
+           Foreground="Black"/>
+
+
         <!-- Barra Superior -->
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Height="50" VerticalAlignment="Center">
             <TextBlock Text="Mi Biblioteca" FontSize="24" FontWeight="Bold" Foreground="#2C3E50" VerticalAlignment="Center"/>

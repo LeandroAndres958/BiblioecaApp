@@ -6,24 +6,49 @@
         xmlns:local="clr-namespace:BibliotecaApp"
         mc:Ignorable="d"
         Title="Detalle del Libro" Height="600" Width="950" Background="#F5F5F5">
+
+    <!-- Contenedor principal con márgenes -->
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
+            <!-- Columna 0: portada e info básica -->
             <ColumnDefinition Width="300"/>
+            <!-- Columna 1: descripción, detalles y botones -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Portada -->
+        <!-- 📘 Portada y datos principales del libro -->
         <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <!-- Imagen de la portada dentro de un borde -->
             <Border Width="200" Height="280" Background="#E0E0E0" CornerRadius="10" Margin="0,0,0,10">
                 <Image x:Name="imgPortada" Stretch="UniformToFill"/>
             </Border>
-            <TextBlock x:Name="txtTitulo" Text="Título del libro" FontSize="20" FontWeight="Bold" TextAlignment="Center" Margin="0,10,0,0"/>
-            <TextBlock x:Name="txtAutor" Text="Autor del libro" FontSize="14" Foreground="Gray" TextAlignment="Center"/>
+
+            <!-- Título del libro -->
+            <TextBlock x:Name="txtTitulo"
+                       Text="Título del libro"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       TextAlignment="Center"
+                       Margin="0,10,0,0"/>
+
+            <!-- Autor del libro -->
+            <TextBlock x:Name="txtAutor"
+                       Text="Autor del libro"
+                       FontSize="14"
+                       Foreground="Gray"
+                       TextAlignment="Center"/>
         </StackPanel>
 
-        <!-- Información del libro -->
+        <!-- 📄 Información extendida del libro -->
         <StackPanel Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Top">
-            <TextBlock Text="Descripción" FontSize="16" FontWeight="Bold" Margin="0,0,0,5"/>
+
+            <!-- Título sección Descripción -->
+            <TextBlock Text="Descripción"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       Margin="0,0,0,5"/>
+
+            <!-- Caja de texto con la descripción -->
             <TextBox x:Name="txtDescripcion"
                      Text="..."
                      TextWrapping="Wrap"
@@ -33,7 +58,7 @@
                      Background="White"
                      BorderBrush="#DDD"/>
 
-            <!-- Detalles -->
+            <!-- 📚 Detalles técnicos -->
             <StackPanel Margin="0,20,0,10">
                 <TextBlock x:Name="txtEditorial" Text="Editorial: ----" Margin="0,2,0,0"/>
                 <TextBlock x:Name="txtPaginas" Text="Páginas: ----" Margin="0,2,0,0"/>
@@ -43,18 +68,36 @@
                 <TextBlock x:Name="txtEstado" Text="Estado: ----" FontWeight="Bold" Margin="0,10,0,0"/>
             </StackPanel>
 
-            <!-- Botones -->
+            <!-- Botones para solicitar o volver -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
-                <Button Content="📥 Solicitar libro" Background="#0078D7" Foreground="White" Width="150" Height="35" Margin="0,0,10,0"/>
-                <Button Content="← Volver" Background="#CCCCCC" Width="100" Height="35"/>
+                <!-- Botón que puede decir "Solicitar" o "Leer" -->
+                <Button x:Name="btnSolicitar"
+                        Content="📥 Solicitar libro"
+                        Background="#0078D7"
+                        Foreground="White"
+                        Width="150"
+                        Height="35"
+                        Margin="0,0,10,0"
+                        Click="btnSolicitar_Click"/>
+
+                <!-- Botón para regresar -->
+                <Button x:Name="btnVolver"
+                        Content="← Volver"
+                        Background="#CCCCCC"
+                        Width="100"
+                        Height="35"
+                        Click="btnVolver_Click"/>
             </StackPanel>
 
-            <!-- Recomendación -->
+            <!-- ⭐ Recomendación visual con barra de progreso -->
             <StackPanel Margin="0,30,0,0">
-                <TextBlock Text="⭐ Recomendado por otros usuarios" Foreground="#FF8C00" FontWeight="Bold"/>
+                <TextBlock Text="⭐ Recomendado por otros usuarios"
+                           Foreground="#FF8C00"
+                           FontWeight="Bold"/>
                 <ProgressBar Minimum="0" Maximum="100" Value="70" Height="10" Margin="0,5,0,0"/>
             </StackPanel>
         </StackPanel>
     </Grid>
 </Window>
+
     
