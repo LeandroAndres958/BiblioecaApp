@@ -16,7 +16,7 @@
                         <TextBox x:Name="txtInsertAutor" Margin="0,5,0,10"/>
 
                         <TextBlock Text="Editorial:" FontWeight="Bold"/>
-                        <TextBox x:Name="txtInsertEditorial" Margin="0,5,0,10"/>
+                        <TextBox x:Name="txtInsertEditorial" Margin="0,5,0,10" TextChanged="txtInsertEditorial_TextChanged"/>
 
                         <TextBlock Text="Páginas:" FontWeight="Bold"/>
                         <TextBox x:Name="txtInsertPaginas" Margin="0,5,0,10"/>

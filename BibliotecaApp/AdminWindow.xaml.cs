@@ -260,5 +260,10 @@ namespace BibliotecaAp
                 MessageBox.Show("⚠️ Selecciona un libro para eliminar.");
             }
         }
+
+        private void txtInsertEditorial_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

@@ -70,12 +70,29 @@ namespace BibliotecaApp
                                 {
                                     // Pasar el nombre al constructor para mostrarlo
                                     LectorWindow lector = new LectorWindow(nombreUsuario);
+
+
+                                    // Copiar estado, tamaño y posición antes de mostrar
+                                    lector.WindowState = this.WindowState;
+                                    lector.Left = this.Left;
+                                    lector.Top = this.Top;
+                                    lector.Width = this.Width;
+                                    lector.Height = this.Height;
+
+
                                     lector.Show();
                                     this.Close();
                                 }
                                 else if (tipo == "admin")
                                 {
+                                    // Abre cventana de Home admin
                                     HomeAdminWindow admin = new HomeAdminWindow();
+
+                                    // Copiar el tamaño y la posición desde el login
+                                    admin.Width = this.Width;
+                                    admin.Height = this.Height;
+                                    admin.Left = this.Left;
+                                    admin.Top = this.Top;
                                     admin.Show();
                                     this.Close();
                                 }
@@ -164,7 +181,18 @@ namespace BibliotecaApp
                                 App.Current.Properties["idUsuario"] = idUsuario;
 
                                 // Abrir ventana lector y cerrar login pasando el nombre
+
+                                WindowState estadoVentana = this.WindowState;
+                                
                                 LectorWindow lector = new LectorWindow(nombre);
+                                lector.WindowState = estadoVentana;
+
+                                // Copiar posición y tamaño de la ventana de login
+                                lector.Left = this.Left;
+                                lector.Top = this.Top;
+                                lector.Width = this.Width;
+                                lector.Height = this.Height;
+
                                 lector.Show();
                                 this.Close();
                             }

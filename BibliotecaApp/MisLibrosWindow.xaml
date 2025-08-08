@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:BibliotecaApp.Converters"
         Title="Mis Libros" Height="600" Width="900"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="Manual"
         Background="#e0e1dd">
 
     <Window.Resources>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,28 +9,32 @@ namespace BibliotecaApp.Controls
     {
         public event Action OnRegresar;
 
-        public LectorPdfControl(string titulo, string urlPdf)
+        public LectorPdfControl(string titulo, string pdfUrl)
         {
             InitializeComponent();
             txtTitulo.Text = titulo;
 
-            // Cargar el PDF en el WebBrowser
-            if (!string.IsNullOrEmpty(urlPdf))
+            InicializarWebView(pdfUrl);
+        }
+
+        private async void InicializarWebView(string pdfUrl)
+        {
+            try
             {
-                try
-                {
-                    webBrowserPdf.Navigate(urlPdf);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error al cargar el PDF: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                // Inicializar el entorno WebView2
+                await webView.EnsureCoreWebView2Async();
+
+                // Cargar el PDF en el WebView2
+                webView.CoreWebView2.Navigate(pdfUrl);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar PDF: " + ex.Message);
             }
         }
 
         private void BtnRegresar_Click(object sender, RoutedEventArgs e)
         {
-            // Evento para regresar a la vista anterior
             OnRegresar?.Invoke();
         }
     }

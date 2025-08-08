@@ -8,7 +8,7 @@ namespace BibliotecaApp
     public partial class MainWindow : Window
     {
         // Variables para almacenar la información real del libro
-        private int idLibro;  // Nuevo: id del libro
+        private int idLibro;
         private string titulo;
         private string autor;
         private string descripcion;
@@ -20,7 +20,16 @@ namespace BibliotecaApp
         private string estado;
         private string portadaUrl;
 
-        // Constructor que recibe todos los datos del libro, incluido el id
+        // Referencia a la ventana home (LectorWindow) para poder manejar su estado
+        private LectorWindow homeWindow;
+
+        // Estado real actual de esta ventana detalle
+        private WindowState estadoActualDetalle;
+
+        // Guardamos el estado que tenía Home antes de abrir Detalle
+        private WindowState estadoHomeAntesDeDetalle;
+
+        // Constructor que recibe todos los datos del libro, la ventana home y el estado previo de Home
         public MainWindow(
             int idLibro,
             string titulo,
@@ -32,9 +41,11 @@ namespace BibliotecaApp
             string categoria,
             string anio,
             string estado,
-            string portadaUrl)
+            string portadaUrl,
+            LectorWindow homeVentana,
+            WindowState estadoHomeAnterior)
         {
-            InitializeComponent(); // Inicializa los componentes visuales de la ventana
+            InitializeComponent();
 
             this.idLibro = idLibro;
             this.titulo = titulo;
@@ -48,10 +59,61 @@ namespace BibliotecaApp
             this.estado = estado;
             this.portadaUrl = portadaUrl;
 
+            this.homeWindow = homeVentana;
+            this.estadoHomeAntesDeDetalle = estadoHomeAnterior;
+
+            // Mostrar detalles en la interfaz
             MostrarDetallesDelLibro();
+
+            // Detectar cambios de estado para actualizar variable
+            this.StateChanged += MainWindow_StateChanged;
+
+            // Guardamos el estado inicial
+            estadoActualDetalle = this.WindowState;
         }
 
-        // Método para mostrar todos los datos en los controles visuales
+        // Detecta cambio de estado ventana Detalle
+        private void MainWindow_StateChanged(object sender, EventArgs e)
+        {
+            estadoActualDetalle = this.WindowState;
+        }
+
+        // Al cerrar la ventana detalle
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            if (homeWindow != null)
+            {
+                // Mostrar ventana Home
+                homeWindow.Show();
+
+                // Actualizar tamaño y posición de Home igual que Detalle
+                homeWindow.Width = this.Width;
+                homeWindow.Height = this.Height;
+                homeWindow.Left = this.Left;
+                homeWindow.Top = this.Top;
+
+                // Controlamos estado para evitar que Home cambie a minimizado si Detalle estaba minimizado
+                if (estadoActualDetalle == WindowState.Maximized)
+                {
+                    homeWindow.WindowState = WindowState.Maximized;
+                }
+                else if (estadoActualDetalle == WindowState.Minimized)
+                {
+                    // En vez de poner Home minimizado, ponemos el estado previo que tenía Home
+                    homeWindow.WindowState = estadoHomeAntesDeDetalle;
+                }
+                else
+                {
+                    // Si Detalle estaba en Normal, dejamos el estado actual de Home intacto
+                }
+
+                homeWindow.Activate();
+            }
+        }
+
+        // Mostrar los datos en los controles de la interfaz
         private void MostrarDetallesDelLibro()
         {
             txtTitulo.Text = titulo;
@@ -71,26 +133,22 @@ namespace BibliotecaApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show("No se pudo cargar la portada del libro. Revisa el enlace.\n" + ex.Message);
+                MessageBox.Show("No se pudo cargar la portada del libro.\n" + ex.Message);
             }
 
-            // Esto llama a la funcion para actualizar el estado del boton
             ActualizarEstadoBoton();
         }
 
-
-
+        // Método para actualizar estado del botón "Solicitar"
         private void ActualizarEstadoBoton()
         {
-            // Verificar si hay usuario logueado
             if (!App.Current.Properties.Contains("idUsuario"))
             {
-                btnSolicitar.Content = "Solicitar libro"; // Por defecto
+                btnSolicitar.Content = "Solicitar libro";
                 return;
             }
 
             int idUsuario = (int)App.Current.Properties["idUsuario"];
-
             string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
 
             try
@@ -122,18 +180,15 @@ namespace BibliotecaApp
             catch (Exception ex)
             {
                 MessageBox.Show("Error al verificar estado de préstamo: " + ex.Message);
-                btnSolicitar.Content = "📥 Solicitar libro"; // Por si hay error, dejar botón en solicitar
+                btnSolicitar.Content = "📥 Solicitar libro";
             }
         }
-
-
 
         // Evento para solicitar libro
         private void btnSolicitar_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Validar usuario logueado y obtener su id
                 if (!App.Current.Properties.Contains("idUsuario"))
                 {
                     MessageBox.Show("No se encontró usuario logueado.");
@@ -141,14 +196,12 @@ namespace BibliotecaApp
                 }
 
                 int idUsuario = (int)App.Current.Properties["idUsuario"];
-
                 string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
 
                 using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    // Validar que usuario no tenga más de 3 libros activos
                     string sqlValidacion = "SELECT COUNT(*) FROM prestamos WHERE id_usuario = @idUsuario AND estado = 'activo'";
 
                     using (var cmdValidacion = new MySqlCommand(sqlValidacion, conn))
@@ -163,7 +216,6 @@ namespace BibliotecaApp
                         }
                     }
 
-                    // Insertar nuevo préstamo
                     string sqlInsert = "INSERT INTO prestamos (id_usuario, id_libro, estado) VALUES (@idUsuario, @idLibro, 'activo')";
 
                     using (var cmdInsert = new MySqlCommand(sqlInsert, conn))
@@ -192,11 +244,10 @@ namespace BibliotecaApp
             }
         }
 
-        // Evento para volver (cerrar ventana)
+        // Botón para volver (cerrar ventana detalle)
         private void btnVolver_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
     }
 }
-

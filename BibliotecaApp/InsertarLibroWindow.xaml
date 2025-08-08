@@ -43,6 +43,22 @@
                 <Button Content="Insertar libro" Click="btnInsertar_Click"
                         Height="45" Background="#2E8B57" Foreground="White"
                         FontWeight="Bold" FontSize="16"/>
+
+                <Button Content="← Volver"
+        Click="BtnVolver_Click"
+        Width="100"
+        Height="30"
+        Margin="0,20,0,0"
+        HorizontalAlignment="Center"
+        Background="#F0F0F0"
+        BorderBrush="#CCCCCC"
+        Foreground="Black"
+        FontSize="13"
+        FontWeight="Normal"
+        Cursor="Hand"/>
+
+
+
             </StackPanel>
         </Grid>
     </ScrollViewer>

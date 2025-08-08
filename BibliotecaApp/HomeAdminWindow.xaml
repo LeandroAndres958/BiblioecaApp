@@ -1,8 +1,8 @@
 ﻿<Window x:Class="BibliotecaApp.HomeAdminWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="Manual"
         Title="Home Administrador" Height="720" Width="1280"
-        WindowStartupLocation="CenterScreen"
         Background="#FFF4F4F4">
 
     <Viewbox Stretch="Uniform">

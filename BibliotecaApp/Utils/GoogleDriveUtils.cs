@@ -29,7 +29,8 @@
                     return linkOriginal;
                 }
 
-                return $"https://drive.google.com/uc?export=download&id={id}";
+                return $"https://drive.google.com/file/d/{id}/preview";
+
             }
             catch
             {

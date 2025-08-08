@@ -7,18 +7,54 @@ using System.Configuration;
 using System.Windows;
 using BibliotecaApp.Utils;
 
+
 namespace MyLibraryApp.Windows.Lector
 {
     public partial class MisLibrosWindow : Window
     {
+        // Referencia a la ventana Lector anterior para poder mostrarla después
         private LectorWindow lectorWindowAnterior;
+
+        // Guardamos el estado previo de la ventana anterior
+        private WindowState estadoAnterior;
+
+        // Detectar si esta ventana se maximizó
+        private bool seMaximizo = false;
 
         public MisLibrosWindow(LectorWindow ventanaAnterior)
         {
             InitializeComponent();
             lectorWindowAnterior = ventanaAnterior;
+
+            // Guardamos el estado actual de la ventana anterior
+            estadoAnterior = lectorWindowAnterior.WindowState;
+
             CargarMisLibros();
+
+            // Eventos para controlar estado de ventana y cierre
+            this.StateChanged += MisLibrosWindow_StateChanged;
+            this.Closing += MisLibrosWindow_Closing;
         }
+
+        private void MisLibrosWindow_StateChanged(object sender, EventArgs e)
+        {
+            // Detectamos si esta ventana se maximizó
+            seMaximizo = this.WindowState == WindowState.Maximized;
+        }
+
+        private void MisLibrosWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Al cerrar, mostramos la ventana anterior
+            lectorWindowAnterior.Show();
+
+            // Y restauramos el estado (maximizado si esta estaba maximizada)
+            if (seMaximizo)
+                lectorWindowAnterior.WindowState = WindowState.Maximized;
+            else
+                lectorWindowAnterior.WindowState = estadoAnterior;
+        }
+
+        // Aquí va el resto de tu código que ya tienes...
 
         public class PrestamoModel
         {
@@ -89,7 +125,7 @@ namespace MyLibraryApp.Windows.Lector
 
         private void btnInicio_Click(object sender, RoutedEventArgs e)
         {
-            lectorWindowAnterior.Show();
+            // Cerramos esta ventana para que se aplique el evento Closing
             this.Close();
         }
 
@@ -110,7 +146,6 @@ namespace MyLibraryApp.Windows.Lector
 
         private void LeerLibro(string titulo, string pdfUrl)
         {
-            // Convierte el link normal de Google Drive a link directo de descarga
             string linkDirecto = GoogleDriveUtils.ConvertirLinkGoogleDrive(pdfUrl);
 
             var lectorPdf = new LectorPdfControl(titulo, linkDirecto);
@@ -166,4 +201,3 @@ namespace MyLibraryApp.Windows.Lector
         }
     }
 }
-

@@ -1,7 +1,10 @@
 ﻿<Window x:Class="BibliotecaApp.LectorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="Manual"
         Title="LectorWindow" Height="600" Width="900" Background="#FAFAFA">
+  
+
 
     <DockPanel Margin="10">
 

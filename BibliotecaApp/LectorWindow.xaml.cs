@@ -4,7 +4,6 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using static BibliotecaAp.AdminWindow;
 
 namespace BibliotecaApp
 {
@@ -16,13 +15,11 @@ namespace BibliotecaApp
             CargarLibrosDesdeBD();
         }
 
-        // Constructor que recibe el nombre de usuario para mostrar saludo
         public LectorWindow(string nombreUsuario) : this()
         {
             txtNombreUsuario.Text = $"Hola, {nombreUsuario}";
         }
 
-        // Carga libros desde la base de datos y los muestra en la interfaz
         private void CargarLibrosDesdeBD()
         {
             if (spNuevosLanzamientos == null || wpLibros == null)
@@ -40,7 +37,6 @@ namespace BibliotecaApp
             {
                 using (var conexion = ConexionBD.ObtenerConexion())
                 {
-                    // Carga los nuevos lanzamientos (últimos 4 libros)
                     string queryNuevos = "SELECT * FROM libros ORDER BY fecha_lanzamiento DESC LIMIT 4";
                     var cmdNuevos = new MySqlCommand(queryNuevos, conexion);
                     using (var reader = cmdNuevos.ExecuteReader())
@@ -53,7 +49,6 @@ namespace BibliotecaApp
                         }
                     }
 
-                    // Carga todos los libros según la categoría seleccionada o todos si es "Todas"
                     string queryTodos = categoriaSeleccionada == "Todas"
                         ? "SELECT * FROM libros ORDER BY titulo"
                         : "SELECT * FROM libros WHERE categoria = @categoria ORDER BY titulo";
@@ -81,7 +76,6 @@ namespace BibliotecaApp
             }
         }
 
-        // Crea visualmente el panel de cada libro con los datos desde el reader
         private Border CrearControlLibroDesdeReader(MySqlDataReader reader)
         {
             int id = Convert.ToInt32(reader["id"]);
@@ -93,9 +87,8 @@ namespace BibliotecaApp
             string idioma = reader["idioma"].ToString();
             string categoria = reader["categoria"].ToString();
             string año = reader["año"].ToString();
-            string estado = "Disponible"; // Aquí puedes agregar lógica para estado real si quieres
+            string estado = "Disponible";
             string urlPortada = reader["portada_link"].ToString();
-
 
             return CrearControlLibro(
                 id,
@@ -104,7 +97,6 @@ namespace BibliotecaApp
             );
         }
 
-        // Método que arma el panel visual de cada libro, con botón para ver detalles
         private Border CrearControlLibro(int id, string titulo, string autor, string descripcion,
             string editorial, string paginas, string idioma, string categoria,
             string año, string estado, string urlPortada)
@@ -126,14 +118,12 @@ namespace BibliotecaApp
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-            // Bloque para cargar la imagen portada
             Image img = new Image
             {
                 Height = 140,
                 Stretch = System.Windows.Media.Stretch.UniformToFill,
                 Margin = new Thickness(0, 0, 0, 5)
             };
-
 
             try
             {
@@ -146,9 +136,8 @@ namespace BibliotecaApp
             }
             catch
             {
-                // Si la imagen no se puede cargar, puedes ignorar o poner una por defecto
+                // No muestra imagen si falla
             }
-            // Aquí la agregas al stack una sola vez
             stack.Children.Add(img);
 
             TextBlock txtTitulo = new TextBlock
@@ -175,7 +164,10 @@ namespace BibliotecaApp
                 Margin = new Thickness(0, 5, 0, 0)
             };
 
-            // Evento para abrir ventana de detalles del libro
+            // Guardamos el estado actual del Home antes de abrir Detalle
+            WindowState estadoHomeAntesDeDetalle = this.WindowState;
+
+            // Evento para abrir ventana detalle libro
             btnVerLibro.Click += (s, e) =>
             {
                 MainWindow detalleLibro = new MainWindow(
@@ -189,21 +181,32 @@ namespace BibliotecaApp
                     categoria,
                     año,
                     estado,
-                    urlPortada
+                    urlPortada,
+                    this,  // Pasamos la ventana Home para que detalle la controle
+                    estadoHomeAntesDeDetalle  // Pasamos el estado actual de Home
                 );
 
-                // Copiar tamaño, posición y estado de esta ventana
-                detalleLibro.Width = this.Width;
-                detalleLibro.Height = this.Height;
                 detalleLibro.WindowStartupLocation = WindowStartupLocation.Manual;
                 detalleLibro.Left = this.Left;
                 detalleLibro.Top = this.Top;
-                detalleLibro.WindowState = this.WindowState;
+
+                if (this.WindowState == WindowState.Maximized)
+                {
+                    detalleLibro.WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    detalleLibro.Width = this.Width;
+                    detalleLibro.Height = this.Height;
+                    detalleLibro.WindowState = this.WindowState;
+                }
 
                 detalleLibro.Show();
+
+                // Ocultar Home mientras se ve detalle
+                this.Hide();
             };
 
-            // stack.Children.Add(img);
             stack.Children.Add(txtTitulo);
             stack.Children.Add(btnVerLibro);
             border.Child = stack;
@@ -211,25 +214,32 @@ namespace BibliotecaApp
             return border;
         }
 
-        // Cambio en el filtro de categorías
         private void cbCategorias_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CargarLibrosDesdeBD();
         }
 
-        // Botón Inicio (puedes personalizar su función)
         private void btnInicio_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Has presionado INICIO.");
         }
 
-        // Botón Mis Libros: abre ventana MisLibros y oculta esta para no saturar ventanas abiertas
         private void btnMisLibros_Click(object sender, RoutedEventArgs e)
         {
-            MisLibrosWindow misLibros = new MisLibrosWindow(this);  // PASAMOS ESTA VENTANA para poder volver luego
+            if (this.WindowState == WindowState.Minimized)
+                this.WindowState = WindowState.Normal;
+
+            MisLibrosWindow misLibros = new MisLibrosWindow(this);
+            misLibros.WindowStartupLocation = WindowStartupLocation.Manual;
+
+            misLibros.Left = this.Left;
+            misLibros.Top = this.Top;
+            misLibros.Width = this.Width;
+            misLibros.Height = this.Height;
+            misLibros.WindowState = this.WindowState;
+
             misLibros.Show();
-            this.Hide();  // Ocultamos la ventana anteriores
+            this.Hide();
         }
     }
 }
-

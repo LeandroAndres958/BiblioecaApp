@@ -78,6 +78,14 @@ namespace BibliotecaApp
                 // Mostrar cualquier error ocurrido durante la inserción
                 MessageBox.Show("Error al insertar el libro: " + ex.Message);
             }
+
+
+        }
+
+        // 🆕 Evento del botón "Volver al Home"
+        private void BtnVolver_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); // Cierra solo esta ventana, HomeAdminWindow sigue abierto
         }
     }
 }

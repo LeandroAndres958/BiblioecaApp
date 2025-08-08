@@ -112,7 +112,8 @@ namespace BibliotecaApp
                 // Abrir ventana detalle admin del libro
                 DetalleAdminLibroWindow detalle = new DetalleAdminLibroWindow(idLibro)
                 {
-                    Owner = this, // Establece la ventana padre
+                    Owner = this, // ventana padre
+                    WindowStartupLocation = WindowStartupLocation.Manual, // Importante para que respete Left y Top
                     WindowState = this.WindowState, // Copia si está maximizada o no
                     Width = this.Width,
                     Height = this.Height,
@@ -131,7 +132,16 @@ namespace BibliotecaApp
         // Evento para abrir ventana insertar libro
         private void btnAgregarLibro_Click(object sender, RoutedEventArgs e)
         {
-            InsertarLibroWindow insertar = new InsertarLibroWindow();
+            InsertarLibroWindow insertar = new InsertarLibroWindow() // abre ;a ventana de agregar libris
+            {
+                Owner = this,  // Establece ventana padre para control modal
+                WindowStartupLocation = WindowStartupLocation.Manual, // Para respetar Left y Top
+                WindowState = this.WindowState,  // Copia estado maximizado o normal
+                Width = this.Width,              // Copia ancho
+                Height = this.Height,            // Copia alto
+                Left = this.Left,                // Copia posición X
+                Top = this.Top                   // Copia posición Y
+            };  
             bool? resultado = insertar.ShowDialog();
 
             if (resultado == true)
